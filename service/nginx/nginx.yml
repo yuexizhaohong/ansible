@@ -1,0 +1,20 @@
+- name: nginx
+  hosts: test
+  tasks:
+    - name: epel-release install
+      yum:
+        name: epel-release
+        state: latest
+    - name: nginx install
+      package:
+        name: nginx
+        state: latest
+    - template:
+        src: /script/ansible/service/nginx/file/nginx.conf
+        dest: /etc/nginx/conf.d/default.conf
+      notify:
+        - restart nginx
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted

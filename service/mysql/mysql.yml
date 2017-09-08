@@ -1,0 +1,42 @@
+- name: sound code install mysql
+  hosts: test
+  tasks:
+    - name: depend pack
+      yum:
+        name: libaio*
+    - name: add mysql group
+      group:
+        name: mysql
+        state: present
+    - name: add mysql user
+      user:
+        name: mysql
+        group: mysql
+        shell: /sbin/nologin
+    - name: mkdir /var/lib/mysql
+      file:
+        state: directory
+        path: /var/lib/mysql
+        owner: mysql
+        group: mysql
+    - name: mysql-5.6.28-linux-glibc2.5-x86_64.tar.gz file
+      copy:
+        src: /script/ansible/service/mysql/file/mysql-5.6.28-linux-glibc2.5-x86_64.tar.gz
+        dest: /home/tools/mysql-5.6.28-linux-glibc2.5-x86_64.tar.gz
+    - name: mysql install
+      shell: cd /home/tools/ && tar xf mysql-5.6.28-linux-glibc2.5-x86_64.tar.gz -C /opt/ && ln -s /opt/mysql-5.6.28-linux-glibc2.5-x86_64/ /opt/mysql && chown mysql.mysql /opt/mysql* -R && /opt/mysql/scripts/mysql_install_db --user=mysql --basedir=/opt/mysql --datadir=/opt/mysql/data --defaults-file=/etc/my.cnf
+    - name: mysql init script
+      template:
+        src: /script/ansible/service/mysql/file/mysql.server
+        dest: /etc/init.d/mysqld
+        mode: 755
+    - name: mysql config
+      template:
+        src: /script/ansible/service/mysql/file/my-default.cnf
+        dest: /etc/my.cnf
+      notify:
+        - restart mysql
+
+  handlers:
+    - name: restart mysql
+      service: name=mysqld state=restarted

@@ -1,0 +1,15 @@
+- name: sound code install php
+  hosts: test
+  tasks:
+    - name: epel install
+      yum:
+        name: epel-release
+        state: latest 
+    - name: depend pack install
+      shell: yum install -y  pcre-devel openssl openssl-devel cmake ncurses-devel bzip2-devel autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libpng libpng-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses curl openssl-devel gdbm-devel db4-devel libXpm-devel libX11-devel gd-devel gmp-devel readline-devel libxslt-devel expat-devel xmlrpc-c xmlrpc-c-devel libmcrypt libmcrypt-devel
+    - name: php sound code
+      file:
+        src: /script/ansible/service/php/file/php-5.6.24.tar.gz 
+        dest: /tmp/php-5.6.24.tar.gz
+    - name: php install
+      shell: cd /tmp/ && tar xf php-5.6.24.tar.gz && cd /tmp/php-5.6.24/ && ./configure --prefix=/opt/php --with-mysql=/opt/mysql --with-mysql-sock --with-mysqli=/opt/mysql/bin/mysql_config --enable-fpm --with-ncurses --enable-soap --with-libxml-dir --with-XMLrpc --with-openssl --with-mcrypt --with-mhash --with-pcre-regex --with-sqlite3 --with-zlib --enable-bcmath --with-iconv --with-bz2 --enable-calendar --with-curl --with-cdb --enable-dom --enable-exif --enable-fileinfo --enable-filter --with-pcre-dir --enable-ftp --with-gd --with-openssl-dir --with-jpeg-dir --with-png-dir --with-zlib-dir  --with-freetype-dir --enable-gd-native-ttf --enable-gd-jis-conv --with-gettext --with-gmp --with-mhash --enable-json --enable-mbstring --disable-mbregex --disable-mbregex-backtrack --with-libmbfl --with-onig --enable-pdo --with-pdo-mysql --with-zlib-dir --with-pdo-sqlite --with-readline --enable-session --enable-shmop --enable-simplexml --enable-sockets --enable-sqlite-utf8 --enable-sysvmsg --enable-sysvsem --enable-sysvshm --enable-wddx --with-libxml-dir  --with-xsl --enable-zip --enable-mysqlnd-compression-support --with-pear && make && make install
